@@ -9,7 +9,7 @@ if [ -z "$TMDB_API_KEY" ]; then
 fi
 
 # Define the output file path
-OUTPUT_FILE="Kinova/Secrets.swift"
+OUTPUT_FILE="../Kinova/Secrets.swift"
 
 # Write the Swift file
 cat > "$OUTPUT_FILE" <<EOL
