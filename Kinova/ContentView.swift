@@ -6,24 +6,19 @@
 //
 
 import SwiftUI
+import TMDb
 
 struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Movies", systemImage: "film") {
-                PlaceholderView("Movies") { index in
-                    Label("Movie \(index)", systemImage: "film")
-                }
+                MoviesView()
             }
             Tab("TV Shows", systemImage: "tv") {
-                PlaceholderView("TV Shows") { index in
-                    Label("TV Show \(index)", systemImage: "tv")
-                }
+                TVShowsView()
             }
             Tab(role: .search) {
-                PlaceholderView("Search") { index in
-                    Label("Search \(index)", systemImage: "magnifyingglass")
-                }
+                SearchView()
             }
         }
         .tabViewStyle(.sidebarAdaptable)
@@ -36,24 +31,64 @@ struct ContentView: View {
     }
 }
 
-private struct PlaceholderView<RowContent: View>: View {
-    var title: LocalizedStringKey
-    var rowContent: (_ index: Int) -> RowContent
+private let client = TMDbClient(apiKey: Secrets.tmdbAPIKey)
 
-    init(
-        _ title: LocalizedStringKey,
-        @ViewBuilder rowContent: @escaping (_ index: Int) -> RowContent
-    ) {
-        self.title = title
-        self.rowContent = rowContent
-    }
+private struct MoviesView: View {
+    @State private var movies: [MovieListItem] = []
 
     var body: some View {
         NavigationStack {
-            List(1..<100, id: \.self) { index in
-                rowContent(index)
+            List(movies) { movie in
+                Text(movie.title)
             }
-            .navigationTitle(title)
+            .navigationTitle("Movies")
+        }
+        .task {
+            do {
+                let response = try await client.movies.nowPlaying(
+                    page: nil,
+                    country: nil,
+                    language: nil
+                )
+                movies = response.results
+            } catch {
+                print("MoviesView", error)
+            }
+        }
+    }
+}
+
+private struct TVShowsView: View {
+    @State private var tvShows: [TVSeriesListItem] = []
+
+    var body: some View {
+        NavigationStack {
+            List(tvShows) { tvShow in
+                Text(tvShow.name)
+            }
+            .navigationTitle("TV Shows")
+        }
+        .task {
+            do {
+                let response = try await client.tvSeries.popular(
+                    page: nil,
+                    language: nil
+                )
+                tvShows = response.results
+            } catch {
+                print("TVShowsView", error)
+            }
+        }
+    }
+}
+
+private struct SearchView: View {
+    var body: some View {
+        NavigationStack {
+            List(1..<100, id: \.self) { index in
+                Text("Result \(index)")
+            }
+            .navigationTitle("Search")
         }
     }
 }

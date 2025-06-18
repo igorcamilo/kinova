@@ -6,6 +6,10 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D1E990102E03653300840398 /* TMDb in Frameworks */ = {isa = PBXBuildFile; productRef = D1E9900F2E03653300840398 /* TMDb */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D13A0A3D2E01F83400FBCFE4 /* Kinova.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kinova.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -22,6 +26,7 @@
 		D13A0A3A2E01F83400FBCFE4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				D1E990102E03653300840398 /* TMDb in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -60,6 +65,9 @@
 				D13A0A3F2E01F83400FBCFE4 /* Kinova */,
 			);
 			name = Kinova;
+			packageProductDependencies = (
+				D1E9900F2E03653300840398 /* TMDb */,
+			);
 			productName = Kinova;
 			productReference = D13A0A3D2E01F83400FBCFE4 /* Kinova.app */;
 			productType = "com.apple.product-type.application";
@@ -89,6 +97,9 @@
 			);
 			mainGroup = D13A0A342E01F83400FBCFE4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D1E9900E2E03653300840398 /* XCRemoteSwiftPackageReference "TMDb" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = D13A0A3E2E01F83400FBCFE4 /* Products */;
 			projectDirPath = "";
@@ -336,6 +347,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D1E9900E2E03653300840398 /* XCRemoteSwiftPackageReference "TMDb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adamayoung/TMDb.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1E9900F2E03653300840398 /* TMDb */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1E9900E2E03653300840398 /* XCRemoteSwiftPackageReference "TMDb" */;
+			productName = TMDb;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D13A0A352E01F83400FBCFE4 /* Project object */;
 }
