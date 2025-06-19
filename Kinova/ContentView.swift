@@ -34,23 +34,70 @@ struct ContentView: View {
 private let client = TMDbClient(apiKey: Secrets.tmdbAPIKey)
 
 private struct MoviesView: View {
-    @State private var movies: [MovieListItem] = []
-
     var body: some View {
         NavigationStack {
-            List(movies) { movie in
-                Text(movie.title)
+            ScrollView(.vertical) {
+                VStack(alignment: .leading) {
+                    MovieListView(title: "Popular") {
+                        try await client.movies.popular(
+                            page: nil,
+                            country: nil,
+                            language: nil
+                        )
+                    }
+                    MovieListView(title: "Now Playing") {
+                        try await client.movies.nowPlaying(
+                            page: nil,
+                            country: nil,
+                            language: nil
+                        )
+                    }
+                    MovieListView(title: "Upcoming") {
+                        try await client.movies.upcoming(
+                            page: nil,
+                            country: nil,
+                            language: nil
+                        )
+                    }
+                    MovieListView(title: "Now Playing") {
+                        try await client.movies.nowPlaying(
+                            page: nil,
+                            country: nil,
+                            language: nil
+                        )
+                    }
+                }
             }
             .navigationTitle("Movies")
         }
+    }
+}
+
+private struct MovieListView: View {
+    let title: LocalizedStringKey
+    let task: () async throws -> MoviePageableList
+
+    @State private var movies: [MovieListItem] = []
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.headline)
+                .padding([.top, .horizontal])
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    ForEach(movies) { movie in
+                        Text(movie.title)
+                            .frame(width: 100, height: 150)
+                            .background(Color.secondary)
+                    }
+                }
+            }
+            .scrollIndicators(.never)
+        }
         .task {
             do {
-                let response = try await client.movies.nowPlaying(
-                    page: nil,
-                    country: nil,
-                    language: nil
-                )
-                movies = response.results
+                movies = try await task().results
             } catch {
                 print("MoviesView", error)
             }
@@ -63,20 +110,48 @@ private struct TVShowsView: View {
 
     var body: some View {
         NavigationStack {
-            List(tvShows) { tvShow in
-                Text(tvShow.name)
+            ScrollView(.vertical) {
+                VStack(alignment: .leading) {
+                    TVShowListView(title: "Popular") {
+                        try await client.tvSeries.popular(
+                            page: nil,
+                            language: nil
+                        )
+                    }
+                }
             }
             .navigationTitle("TV Shows")
         }
+    }
+}
+
+private struct TVShowListView: View {
+    let title: LocalizedStringKey
+    let task: () async throws -> TVSeriesPageableList
+
+    @State private var tvShows: [TVSeriesListItem] = []
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.headline)
+                .padding([.top, .horizontal])
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    ForEach(tvShows) { tvShow in
+                        Text(tvShow.name)
+                            .frame(width: 100, height: 150)
+                            .background(Color.secondary)
+                    }
+                }
+            }
+            .scrollIndicators(.never)
+        }
         .task {
             do {
-                let response = try await client.tvSeries.popular(
-                    page: nil,
-                    language: nil
-                )
-                tvShows = response.results
+                tvShows = try await task().results
             } catch {
-                print("TVShowsView", error)
+                print("TVShowListView", error)
             }
         }
     }
