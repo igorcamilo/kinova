@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct KinovaApp: App {
+    @State private var client = KinovaClient()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .environment(client)
     }
 }
