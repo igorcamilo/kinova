@@ -29,7 +29,15 @@ struct TVShowsView: View {
                     }
                 }
             }
+#if !os(tvOS)
             .navigationTitle("TV Shows")
+#endif
+            .navigationDestination(for: Movie.ID.self) { id in
+                MovieDetailView(id: id)
+            }
+            .navigationDestination(for: TVShow.ID.self) { id in
+                TVShowDetailView(id: id)
+            }
         }
     }
 }

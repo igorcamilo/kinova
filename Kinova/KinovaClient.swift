@@ -88,7 +88,7 @@ private struct TMDBMovie: Codable {
         guard let posterURL = URL(string: posterURLString) else {
             throw KinovaClientError.invalidURL(posterURLString)
         }
-        return Movie(id: id, posterURL: posterURL, title: title)
+        return Movie(id: Movie.ID(rawValue: id), posterURL: posterURL, title: title)
     }
 }
 
@@ -102,20 +102,28 @@ private struct TMDBTVShow: Codable, Identifiable {
         guard let posterURL = URL(string: posterURLString) else {
             throw KinovaClientError.invalidURL(posterURLString)
         }
-        return TVShow(id: id, posterURL: posterURL, title: name)
+        return TVShow(id: TVShow.ID(rawValue: id), posterURL: posterURL, title: name)
     }
 }
 
 struct Movie: Identifiable, PosterProvider {
-    var id: Int
+    var id: ID
     var posterURL: URL
     var title: String
+
+    struct ID: Hashable, RawRepresentable {
+        var rawValue: Int
+    }
 }
 
 struct TVShow: Identifiable, PosterProvider {
-    var id: Int
+    var id: ID
     var posterURL: URL
     var title: String
+
+    struct ID: Hashable, RawRepresentable {
+        var rawValue: Int
+    }
 }
 
 protocol PosterProvider: Identifiable {

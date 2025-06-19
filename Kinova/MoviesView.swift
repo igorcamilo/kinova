@@ -29,7 +29,15 @@ struct MoviesView: View {
                     }
                 }
             }
+#if !os(tvOS)
             .navigationTitle("Movies")
+#endif
+            .navigationDestination(for: Movie.ID.self) { id in
+                MovieDetailView(id: id)
+            }
+            .navigationDestination(for: TVShow.ID.self) { id in
+                TVShowDetailView(id: id)
+            }
         }
     }
 }

@@ -20,18 +20,28 @@ struct PosterCarouselView<T: PosterProvider>: View {
                 .font(.headline)
                 .padding([.top, .horizontal])
             ScrollView(.horizontal) {
-                LazyHStack {
+                LazyHStack(alignment: .top) {
                     ForEach(list) { item in
-                        AsyncImage(url: item.posterURL)
-                            .frame(width: 185, height: 278)
+                        NavigationLink(value: item.id) {
+                            VStack {
+                                AsyncImage(url: item.posterURL)
+                                Text(item.title).font(.caption)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(width: 185)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
             .scrollIndicators(.never)
+            .scrollClipDisabled()
         }
         .task {
             do {
                 list = try await task()
+            } catch URLError.cancelled {
+                // Do nothing
             } catch {
                 print("MoviesView", error)
             }
