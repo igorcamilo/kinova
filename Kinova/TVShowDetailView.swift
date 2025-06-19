@@ -10,10 +10,10 @@
 import SwiftUI
 
 struct TVShowDetailView: View {
-    let id: TVShow.ID
+    let tvShow: TVShow
 
     var body: some View {
-        Text("TV Show \(id.rawValue)")
-            .navigationTitle("TV Show Detail")
+        Text("TV Show \(tvShow.id)")
+            .navigationTitle(tvShow.title)
     }
 }

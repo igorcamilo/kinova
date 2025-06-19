@@ -21,12 +21,6 @@ struct ContentView: View {
             }
         }
         .tabViewStyle(.sidebarAdaptable)
-        .frame(
-            minWidth: 400,
-            maxWidth: .infinity,
-            minHeight: 300,
-            maxHeight: .infinity
-        )
     }
 }
 

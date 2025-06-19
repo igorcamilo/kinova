@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PosterCarouselView<T: PosterProvider>: View {
     let title: LocalizedStringKey
+    @Binding var selection: T?
     let task: () async throws -> [T]
 
     @State private var list: [T] = []
@@ -22,21 +23,13 @@ struct PosterCarouselView<T: PosterProvider>: View {
             ScrollView(.horizontal) {
                 LazyHStack(alignment: .top) {
                     ForEach(list) { item in
-                        NavigationLink(value: item.id) {
+                        Button {
+                            selection = item
+                        } label: {
 #if os(tvOS)
-                            AsyncImage(url: item.posterURL)
-                                .frame(width: 185, height: 278)
-                            Text(item.title).font(.caption)
-                                .multilineTextAlignment(.center)
-                                .frame(width: 185)
+                            PosterView(item: item)
 #else
-                            VStack {
-                                AsyncImage(url: item.posterURL)
-                                    .frame(width: 185, height: 278)
-                                Text(item.title).font(.caption)
-                                    .multilineTextAlignment(.center)
-                                    .frame(width: 185)
-                            }
+                            VStack { PosterView(item: item) }
 #endif
                         }
                     }
@@ -44,8 +37,11 @@ struct PosterCarouselView<T: PosterProvider>: View {
             }
             .scrollIndicators(.never)
             .scrollClipDisabled()
-            .buttonStyle(.borderless)
         }
+        .buttonStyle(.borderless)
+#if os(tvOS)
+        .focusSection()
+#endif
         .task {
             do {
                 list = try await task()
@@ -55,5 +51,30 @@ struct PosterCarouselView<T: PosterProvider>: View {
                 print("MoviesView", error)
             }
         }
+    }
+}
+
+private struct PosterView<T: PosterProvider>: View {
+    let item: T
+
+    var body: some View {
+        AsyncImage(url: item.posterURL) { image in
+            image.resizable()
+        } placeholder: {
+            Color.secondary
+        }
+#if os(tvOS)
+        .frame(width: 250, height: 375)
+#else
+        .frame(width: 180, height: 270)
+#endif
+        Text(item.title)
+            .font(.caption)
+            .multilineTextAlignment(.center)
+#if os(tvOS)
+            .frame(width: 250)
+#else
+            .frame(width: 180)
+#endif
     }
 }

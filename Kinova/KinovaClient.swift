@@ -84,11 +84,11 @@ private struct TMDBMovie: Codable {
     var title: String
 
     func formatted() throws -> Movie {
-        let posterURLString = "https://image.tmdb.org/t/p/w185\(posterPath)"
+        let posterURLString = "https://image.tmdb.org/t/p/w500\(posterPath)"
         guard let posterURL = URL(string: posterURLString) else {
             throw KinovaClientError.invalidURL(posterURLString)
         }
-        return Movie(id: Movie.ID(rawValue: id), posterURL: posterURL, title: title)
+        return Movie(id: id, posterURL: posterURL, title: title)
     }
 }
 
@@ -98,32 +98,24 @@ private struct TMDBTVShow: Codable, Identifiable {
     var posterPath: String
 
     func formatted() throws -> TVShow {
-        let posterURLString = "https://image.tmdb.org/t/p/w185\(posterPath)"
+        let posterURLString = "https://image.tmdb.org/t/p/w500\(posterPath)"
         guard let posterURL = URL(string: posterURLString) else {
             throw KinovaClientError.invalidURL(posterURLString)
         }
-        return TVShow(id: TVShow.ID(rawValue: id), posterURL: posterURL, title: name)
+        return TVShow(id: id, posterURL: posterURL, title: name)
     }
 }
 
-struct Movie: Identifiable, PosterProvider {
-    var id: ID
+struct Movie: Hashable, Identifiable, PosterProvider {
+    var id: Int
     var posterURL: URL
     var title: String
-
-    struct ID: Hashable, RawRepresentable {
-        var rawValue: Int
-    }
 }
 
-struct TVShow: Identifiable, PosterProvider {
-    var id: ID
+struct TVShow: Hashable, Identifiable, PosterProvider {
+    var id: Int
     var posterURL: URL
     var title: String
-
-    struct ID: Hashable, RawRepresentable {
-        var rawValue: Int
-    }
 }
 
 protocol PosterProvider: Identifiable {

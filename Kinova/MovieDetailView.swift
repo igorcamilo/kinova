@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct MovieDetailView: View {
-    let id: Movie.ID
+    let movie: Movie
 
     var body: some View {
-        Text("Movie \(id.rawValue)")
-            .navigationTitle("Movie Detail")
+        Text("Movie \(movie.id)")
+            .navigationTitle(movie.title)
     }
 }

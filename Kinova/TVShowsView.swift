@@ -10,21 +10,22 @@ import SwiftUI
 
 struct TVShowsView: View {
     @Environment(KinovaClient.self) private var client
+    @State private var selctedTVShow: TVShow?
 
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
                 VStack(alignment: .leading) {
-                    PosterCarouselView(title: "Popular") {
+                    PosterCarouselView(title: "Popular", selection: $selctedTVShow) {
                         try await client.popularTVShows()
                     }
-                    PosterCarouselView(title: "Airing Today") {
+                    PosterCarouselView(title: "Airing Today", selection: $selctedTVShow) {
                         try await client.airingTodayTVShows()
                     }
-                    PosterCarouselView(title: "On TV") {
+                    PosterCarouselView(title: "On TV", selection: $selctedTVShow) {
                         try await client.onTheAirTVShows()
                     }
-                    PosterCarouselView(title: "Top Rated") {
+                    PosterCarouselView(title: "Top Rated", selection: $selctedTVShow) {
                         try await client.topRatedTVShows()
                     }
                 }
@@ -32,11 +33,8 @@ struct TVShowsView: View {
 #if !os(tvOS)
             .navigationTitle("TV Shows")
 #endif
-            .navigationDestination(for: Movie.ID.self) { id in
-                MovieDetailView(id: id)
-            }
-            .navigationDestination(for: TVShow.ID.self) { id in
-                TVShowDetailView(id: id)
+            .navigationDestination(item: $selctedTVShow) { tvShow in
+                TVShowDetailView(tvShow: tvShow)
             }
         }
     }
