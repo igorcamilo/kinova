@@ -23,19 +23,28 @@ struct PosterCarouselView<T: PosterProvider>: View {
                 LazyHStack(alignment: .top) {
                     ForEach(list) { item in
                         NavigationLink(value: item.id) {
+#if os(tvOS)
+                            AsyncImage(url: item.posterURL)
+                                .frame(width: 185, height: 278)
+                            Text(item.title).font(.caption)
+                                .multilineTextAlignment(.center)
+                                .frame(width: 185)
+#else
                             VStack {
                                 AsyncImage(url: item.posterURL)
+                                    .frame(width: 185, height: 278)
                                 Text(item.title).font(.caption)
                                     .multilineTextAlignment(.center)
+                                    .frame(width: 185)
                             }
-                            .frame(width: 185)
+#endif
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
             .scrollIndicators(.never)
             .scrollClipDisabled()
+            .buttonStyle(.borderless)
         }
         .task {
             do {
